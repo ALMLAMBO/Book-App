@@ -173,7 +173,7 @@ namespace BookApp.Controllers {
 			if (!_countryRepository.CountryExists(countryId))
 				return NotFound();
 
-			if (_countryRepository(countryId, updatedCountryInfo.Name)) {
+			if (_countryRepository.IsDuplicateCountryName(countryId, updatedCountryInfo.Name)) {
 				ModelState.AddModelError("", $"Country {updatedCountryInfo.Name} already exists");
 				return StatusCode(422, ModelState);
 			}
