@@ -59,6 +59,14 @@ namespace BookApp.Services {
 			return saved >= 0 ? true : false;
 		}
 
+		public bool IsDuplicateCountryName(int countryId, string countryName) {
+			Country country = _countryContext.Countries
+				.Where(c => c.Name.Trim().ToUpper() == 
+				countryName.Trim().ToUpper() && c.Id != countryId)
+				.FirstOrDefault();
+
+			return country == null ? false : true;
+		}
 		public bool UpdateCountry(Country country) {
 			_countryContext.Update(country);
 			return Save();
