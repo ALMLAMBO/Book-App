@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookApp.Models;
+using BookApp.Dtos;
 
 namespace BookApp.Controllers {
 	[Route("api/[controller]")]
@@ -17,10 +19,26 @@ namespace BookApp.Controllers {
 
 		//api/countries
 		[HttpGet]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(200, Type = typeof(IEnumerable<CountryDto>))]
 		public ActionResult GetCountries() {
-			return Ok(_countryRepository
-				.GetCountries().ToList()
-			);
+			List<Country> countries = _countryRepository
+				.GetCountries().ToList();
+
+			if(!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			List<CountryDto> countriesDto = new List<CountryDto>();
+
+			foreach (Country country in countries) {
+				countriesDto.Add(new CountryDto() {
+					Id = country.Id, 
+					Name = country.Name
+				});
+			}
+
+			return Ok(countriesDto);
 		}
 	}
 }
