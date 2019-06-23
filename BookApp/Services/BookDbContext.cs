@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookApp.Services {
 	public class BookDbContext : DbContext {
-		public BookDbContext(DbContextOptions<DbContext> options) 
+		public BookDbContext(DbContextOptions<BookDbContext> options) 
 			: base(options) {
 
 			Database.Migrate();
