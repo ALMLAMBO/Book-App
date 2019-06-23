@@ -86,5 +86,36 @@ namespace BookApp.Controllers {
 
 			return Ok(countryDto);
 		}
+
+		//api/countries/countryId/authors
+		[HttpGet("{countryId}/authors")]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(200, Type = typeof(IEnumerable<AuthorDto>))]
+		public IActionResult GetAuthorFromACountry(int countryId) {
+			if(!_countryRepository.CountryExists(countryId)) {
+				return NotFound();
+			}
+
+			List<Author> authors = _countryRepository
+				.GetAuthorsFromACountry(countryId)
+				.ToList();
+
+			if(!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			List<AuthorDto> authorsDto = new List<AuthorDto>();
+
+			foreach (Author author in authors) {
+				authorsDto.Add(new AuthorDto() {
+					Id = author.Id,
+					FirstName = author.FirstName,
+					LastName = author.LastName
+				});
+			}
+
+			return Ok(authorsDto);
+		}
 	}
 }
