@@ -10,5 +10,6 @@ namespace BookApp.Services {
 		Country GetCountry(int countryId);
 		Country GetCountryOfAnAuthor(int authorId);
 		ICollection<Author> GetAuthorsFromACountry(int countryId);
+		bool CountryExists(int countryId);
 	}
 }
