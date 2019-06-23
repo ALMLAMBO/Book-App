@@ -12,7 +12,7 @@ namespace BookApp.Models {
 		public int Id { get; set; }
 		[Required]
 		[MaxLength(100, ErrorMessage = "First Name cannot be more than 100 characters")]
-		public string FisrtName { get; set; }
+		public string FirstName { get; set; }
 		[Required]
 		[MaxLength(200, ErrorMessage = "Last Name cannot be more than 200 characters")]
 		public string LastName { get; set; }
