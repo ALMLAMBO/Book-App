@@ -40,5 +40,28 @@ namespace BookApp.Controllers {
 
 			return Ok(countriesDto);
 		}
+
+		[HttpGet("{countryId}")]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(200, Type = typeof(CountryDto))]
+		public ActionResult GetCountry(int countryId) {
+			if(!_countryRepository.CountryExists(countryId)) {
+				return NotFound();
+			}
+
+			Country country = _countryRepository.GetCountry(countryId);
+
+			if(!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			CountryDto countryDto = new CountryDto() {
+				Id = country.Id,
+				Name = country.Name
+			};
+
+			return Ok(countryDto);
+		}
 	}
 }
