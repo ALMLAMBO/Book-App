@@ -9,5 +9,6 @@ namespace BookApp.Models {
 		public string FisrtName { get; set; }
 		public string LastName { get; set; }
 		public virtual Country Country { get; set; }
+		 
 	}
 }
