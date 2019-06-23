@@ -17,6 +17,17 @@ namespace BookApp.Services {
 				.Any(c => c.Id == countryId);
 		}
 
+		public bool CreateCountry(Country country) {
+			_countryContext.AddAsync(country);
+			return Save();
+		}
+
+		public bool DeleteCountry(Country country) {
+			_countryContext.Remove(country);
+
+			return Save();
+		}
+
 		public ICollection<Author> GetAuthorsFromACountry(int countryId) {
 			return _countryContext.Authors
 				.Where(c => c.Country.Id == countryId)
@@ -40,6 +51,17 @@ namespace BookApp.Services {
 				.Where(a => a.Id == authorId)
 				.Select(c => c.Country)
 				.FirstOrDefault();
+		}
+
+		public bool Save() {
+			int saved = _countryContext.SaveChanges();
+
+			return saved >= 0 ? true : false;
+		}
+
+		public bool UpdateCountry(Country country) {
+			_countryContext.Update(country);
+			return Save();
 		}
 	}
 }
