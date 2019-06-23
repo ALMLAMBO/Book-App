@@ -9,5 +9,6 @@ namespace BookApp.Models {
 		public string ISBN { get; set; }
 		public string Title { get; set; }
 		public DateTime DatePublished { get; set; }
+		public virtual ICollection<Review> Reviews { get; set; }
 	}
 }
