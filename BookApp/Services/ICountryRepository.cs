@@ -11,6 +11,7 @@ namespace BookApp.Services {
 		Country GetCountryOfAnAuthor(int authorId);
 		ICollection<Author> GetAuthorsFromACountry(int countryId);
 		bool CountryExists(int countryId);
+		bool IsDuplicateCountryName(int countryId, string countryName);
 		bool CreateCountry(Country country);
 		bool UpdateCountry(Country country);
 		bool DeleteCountry(Country country);
