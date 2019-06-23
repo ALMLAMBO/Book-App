@@ -188,5 +188,46 @@ namespace BookApp.Controllers {
 
 			return NoContent();
 		}
+
+		//api/countries/countryId
+		[HttpDelete("{countryId}")]
+		[ProducesResponseType(204)] //no content
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(409)]
+		[ProducesResponseType(422)]
+		[ProducesResponseType(500)]
+		public IActionResult DeleteCountry(int countryId) {
+			if(!_countryRepository.CountryExists(countryId)) {
+				return NotFound();
+			}
+
+			Country countryToDelete = _countryRepository
+				.GetCountry(countryId);
+
+			if(_countryRepository
+				.GetAuthorsFromACountry(countryId)
+				.Count > 0) {
+
+				ModelState
+					.AddModelError("", $"Country {countryToDelete.Name} " +
+						$"cannot be deleted because it is used by at least one author.");
+
+				return StatusCode(409, ModelState);
+			}
+
+			if (!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			if(!_countryRepository.DeleteCountry(countryToDelete)) {
+				ModelState
+					.AddModelError("", $"Something went wrong updating {countryToDelete.Name}");
+
+				return StatusCode(500, ModelState);
+			}
+
+			return NoContent();
+		}
 	}
 }
