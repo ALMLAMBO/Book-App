@@ -21,7 +21,7 @@ namespace BookApp.Controllers {
 		[HttpGet]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<CountryDto>))]
-		public ActionResult GetCountries() {
+		public IActionResult GetCountries() {
 			List<Country> countries = _countryRepository
 				.GetCountries().ToList();
 
@@ -41,16 +41,39 @@ namespace BookApp.Controllers {
 			return Ok(countriesDto);
 		}
 
+		//api/countries/countryId
 		[HttpGet("{countryId}")]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
 		[ProducesResponseType(200, Type = typeof(CountryDto))]
-		public ActionResult GetCountry(int countryId) {
+		public IActionResult GetCountry(int countryId) {
 			if(!_countryRepository.CountryExists(countryId)) {
 				return NotFound();
 			}
 
 			Country country = _countryRepository.GetCountry(countryId);
+
+			if(!ModelState.IsValid) {
+				return BadRequest(ModelState);
+			}
+
+			CountryDto countryDto = new CountryDto() {
+				Id = country.Id,
+				Name = country.Name
+			};
+
+			return Ok(countryDto);
+		}
+
+		//api/countries/authors/authorId
+		[HttpGet("authors/{authorId}")]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[ProducesResponseType(200, Type = typeof(CountryDto))]
+		public IActionResult GetCountryOfAnAuthor(int authorId) {
+
+			Country country = _countryRepository
+				.GetCountryOfAnAuthor(authorId);
 
 			if(!ModelState.IsValid) {
 				return BadRequest(ModelState);
