@@ -9,6 +9,6 @@ namespace BookApp.Models {
 		public Book Book { get; set; }
 
 		public int AuthorId { get; set; }
-		public Author Authror { get; set; }
+		public Author Author { get; set; }
 	}
 }
