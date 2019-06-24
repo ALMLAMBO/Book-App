@@ -67,13 +67,13 @@ namespace BookApp.Controllers
             }
 
             Book book = repository.Get()
-                .Where(c => (c.Name).Trim().ToUpper() == (bookToCreate.Name).Trim().ToUpper())
+                .Where(c => (c.Title).Trim().ToUpper() == (bookToCreate.Title).Trim().ToUpper())
                 .FirstOrDefault();
 
             if (book != null)
             {
                 ModelState
-                    .AddModelError("", $"Book {book.Name} already exists.");
+                    .AddModelError("", $"Book {book.Title} already exists.");
 
                 return StatusCode(422, ModelState);
             }
@@ -86,7 +86,7 @@ namespace BookApp.Controllers
             if (!repository.Create(bookToCreate))
             {
                 ModelState
-                    .AddModelError("", $"Something went wrong while saving {book.Name}.");
+                    .AddModelError("", $"Something went wrong while saving {book.Title}.");
 
                 return StatusCode(500, ModelState);
             }
@@ -115,7 +115,7 @@ namespace BookApp.Controllers
             }
             if (!repository.Update(updatedBook))
             {
-                ModelState.AddModelError("", $"Something went wrong updating {updatedBook.Name}");
+                ModelState.AddModelError("", $"Something went wrong updating {updatedBook.Title}");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
@@ -146,7 +146,7 @@ namespace BookApp.Controllers
             if (!repository.Delete(bookToDelete))
             {
                 ModelState
-                    .AddModelError("", $"Something went wrong deleting {bookToDelete.Name}");
+                    .AddModelError("", $"Something went wrong deleting {bookToDelete.Title}");
 
                 return StatusCode(500, ModelState);
             }
