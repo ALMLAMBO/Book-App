@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BookApp.Services;
@@ -33,7 +34,7 @@ namespace BookApp {
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, BookDbContext context) {
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, BookDbContext bookContext) {
 			if (env.IsDevelopment()) {
 				app.UseDeveloperExceptionPage();
 			}
@@ -42,8 +43,20 @@ namespace BookApp {
 			//	await context.Response.WriteAsync("Hello World!");
 			//});
 
-			//context.SeedDataContext();
+			//bookContext.SeedDataContext();
 
+			app.Use(async (context, next) => {
+				await next();
+				if(context.Response.StatusCode == 404 && 
+					!Path.HasExtension(context.Request.Path.Value)) {
+			
+					context.Request.Path = "/index.html";
+					await next();
+				}
+			});
+
+			app.UseDefaultFiles();
+			app.UseStaticFiles();
 			app.UseMvc();
 		}
 	}
