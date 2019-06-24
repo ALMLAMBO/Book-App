@@ -96,5 +96,62 @@ namespace BookApp.Controllers
                 authorToCreate
             );
         }
+
+        [HttpPut("{authorId}")]
+        [ProducesResponseType(204)] //no content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public IActionResult Update(int authorId, [FromBody]Author updatedAuthor)
+        {
+            if(updatedAuthor == null || authorId != updatedAuthor.Id)
+            {
+                return BadRequest(ModelState);
+            }
+            if(!repository.Exists(authorId))
+            {
+                return NotFound();
+            }
+            if(!repository.Update(updatedAuthor))
+            {
+                ModelState.AddModelError("", $"Something went wrong updating {updatedAuthor.FirstName}");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{authorId}")]
+        [ProducesResponseType(204)] //no content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public IActionResult Delete(int authorId)
+        {
+            if (!repository.Exists(authorId))
+            {
+                return NotFound();
+            }
+
+            Author authorToDelete = repository
+                .GetById(authorId);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!repository.Delete(authorToDelete))
+            {
+                ModelState
+                    .AddModelError("", $"Something went wrong deleting {authorToDelete.FirstName}");
+
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
     }
 }
