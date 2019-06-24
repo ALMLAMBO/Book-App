@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace BookApp {
 	public static class DbSeedingClass {
 		public static void SeedDataContext(this BookDbContext context) {
+            /*
 			var booksAuthors = new List<BookAuthor>() {
 				new BookAuthor() {
 					Book = new Book() {
@@ -123,6 +124,8 @@ namespace BookApp {
 
 			context.BookAuthors.AddRange(booksAuthors);
 			context.SaveChanges();
+            */
 		}
+        
 	}
 }

@@ -30,7 +30,6 @@ namespace BookApp {
 				c.UseSqlServer(connectionString);
 			});
 
-			services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ReflectiveRepository<Author>>();
             services.AddScoped<ReflectiveRepository<Book>>();
             services.AddScoped<ReflectiveRepository<Category>>();
