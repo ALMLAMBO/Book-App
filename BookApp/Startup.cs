@@ -49,7 +49,7 @@ namespace BookApp {
 			//bookContext.SeedDataContext();
 
 			app.Use(async (context, next) => {
-				await next();
+				//await next();
 				if(context.Response.StatusCode == 404 && 
 					!Path.HasExtension(context.Request.Path.Value)) {
 			
