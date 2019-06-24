@@ -11,9 +11,6 @@ namespace BookApp.Models {
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		[Required]
-		[StringLength(10, MinimumLength = 3, ErrorMessage = "ISBN must be between 3 and 10 characters")]
-		public string ISBN { get; set; }
-		[Required]
 		[MaxLength(200, ErrorMessage = "Title cannot be more than 200 characters")]
 		public string Title { get; set; }
 		public DateTime? DatePublished { get; set; }
