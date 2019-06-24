@@ -22,7 +22,7 @@ namespace BookApp.Controllers
         [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
-        public IActionResult GetBooks()
+        public IActionResult GetCategories()
         {
             List<Category> books = repository.Get().ToList();
             if (!ModelState.IsValid)
@@ -37,7 +37,7 @@ namespace BookApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200, Type = typeof(Category))]
-        public IActionResult GetBook(int bookId)
+        public IActionResult GetCategory(int bookId)
         {
             if (!repository.Exists(bookId))
             {
@@ -91,7 +91,7 @@ namespace BookApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return CreatedAtRoute("GetBook",
+            return CreatedAtRoute("GetCategory",
                 new { categoryId = bookToCreate.Id },
                 bookToCreate
             );
