@@ -1,5 +1,4 @@
-﻿using BookApp.Dtos;
-using BookApp.Models;
+﻿using BookApp.Models;
 using BookApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,32 +21,22 @@ namespace BookApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(400)]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<AuthorDto>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Author>))]
         public IActionResult GetAuthors()
         {
             List<Author> authors = repository.Get().ToList();
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            List<AuthorDto> authorDtos = new List<AuthorDto>();
-            foreach (Author author in authors)
-            {
-                authorDtos.Add(new AuthorDto()
-                {
-                    Id = author.Id,
-                    FirstName = author.FirstName,
-                    LastName = author.LastName
-                });
-            }
-            return Ok(authorDtos);
+            return Ok(authors);
         }
 
         //api/countries/countryId
         [HttpGet("{authorId}", Name = "GetAuthor")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        [ProducesResponseType(200, Type = typeof(AuthorDto))]
+        [ProducesResponseType(200, Type = typeof(Author))]
         public IActionResult GetAuthor(int authorId)
         {
             if (!repository.Exists(authorId))
@@ -62,14 +51,7 @@ namespace BookApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            AuthorDto authorDto = new AuthorDto()
-            {
-                Id = author.Id,
-                FirstName = author.FirstName,
-                LastName = author.LastName
-            };
-
-            return Ok(authorDto);
+            return Ok(author);
         }
 
         [HttpPost("")]
