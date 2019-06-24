@@ -16,6 +16,7 @@ namespace BookApp {
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 			WebHost.CreateDefaultBuilder(args)
+				.UseUrls("http://localhost:9191")
 				.UseStartup<Startup>();
 	}
 }
