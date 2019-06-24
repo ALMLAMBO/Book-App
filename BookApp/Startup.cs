@@ -32,6 +32,8 @@ namespace BookApp {
 
 			services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<ReflectiveRepository<Author>>();
+            services.AddScoped<ReflectiveRepository<Book>>();
+            services.AddScoped<ReflectiveRepository<Category>>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
