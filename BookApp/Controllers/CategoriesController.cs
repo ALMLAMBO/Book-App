@@ -91,7 +91,7 @@ namespace BookApp.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return CreatedAtRoute("GetBook",
+            return CreatedAtRoute("GetCategory",
                 new { categoryId = bookToCreate.Id },
                 bookToCreate
             );
