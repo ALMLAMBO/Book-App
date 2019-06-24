@@ -11,7 +11,7 @@ namespace BookApp.Models {
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		[Required]
-		[MaxLength(50, ErrorMessage = "Category name cannot be more than 50 characters")]
+		[MaxLength(50, ErrorMessage = "Country name cannot be more than 50 characters")]
 		public string Name { get; set; }
 		public virtual ICollection<Author> Authors { get; set; }
 	}
