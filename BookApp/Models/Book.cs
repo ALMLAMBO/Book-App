@@ -11,8 +11,8 @@ namespace BookApp.Models {
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		[Required]
-		[MaxLength(200, ErrorMessage = "Title cannot be more than 200 characters")]
-		public string Title { get; set; }
+		[MaxLength(200, ErrorMessage = "Name cannot be more than 200 characters")]
+		public string Name { get; set; }
 		public DateTime? DatePublished { get; set; }
 		public virtual ICollection<BookAuthor> BookAuthors { get; set; }
 		public virtual ICollection<BookCategory> BookCategories { get; set; }
