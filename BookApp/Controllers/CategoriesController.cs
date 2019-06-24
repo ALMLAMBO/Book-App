@@ -10,21 +10,21 @@ namespace BookApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BooksController : Controller
+    public class CategoriesController : Controller
     {
-        private ReflectiveRepository<Book> repository;
+        private ReflectiveRepository<Category> repository;
 
-        public BooksController(ReflectiveRepository<Book> repo)
+        public CategoriesController(ReflectiveRepository<Category> repo)
         {
             repository = repo;
         }
 
         [HttpGet]
         [ProducesResponseType(400)]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Book>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Category>))]
         public IActionResult GetBooks()
         {
-            List<Book> books = repository.Get().ToList();
+            List<Category> books = repository.Get().ToList();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -33,10 +33,10 @@ namespace BookApp.Controllers
         }
 
         //api/countries/countryId
-        [HttpGet("{bookId}", Name = "GetBook")]
+        [HttpGet("{categoryId}", Name = "GetCategory")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        [ProducesResponseType(200, Type = typeof(Book))]
+        [ProducesResponseType(200, Type = typeof(Category))]
         public IActionResult GetBook(int bookId)
         {
             if (!repository.Exists(bookId))
@@ -44,7 +44,7 @@ namespace BookApp.Controllers
                 return NotFound();
             }
 
-            Book book = repository.GetById(bookId);
+            Category book = repository.GetById(bookId);
 
             if (!ModelState.IsValid)
             {
@@ -55,25 +55,25 @@ namespace BookApp.Controllers
         }
 
         [HttpPost("")]
-        [ProducesResponseType(201, Type = typeof(Book))]
+        [ProducesResponseType(201, Type = typeof(Category))]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Create([FromBody]Book bookToCreate)
+        public IActionResult Create([FromBody]Category bookToCreate)
         {
             if (bookToCreate == null)
             {
                 return BadRequest(ModelState);
             }
 
-            Book book = repository.Get()
-                .Where(c => (c.Title).Trim().ToUpper() == (bookToCreate.Title).Trim().ToUpper())
+            Category book = repository.Get()
+                .Where(c => (c.Name).Trim().ToUpper() == (bookToCreate.Name).Trim().ToUpper())
                 .FirstOrDefault();
 
             if (book != null)
             {
                 ModelState
-                    .AddModelError("", $"Book {book.Title} already exists.");
+                    .AddModelError("", $"Category {book.Name} already exists.");
 
                 return StatusCode(422, ModelState);
             }
@@ -86,24 +86,24 @@ namespace BookApp.Controllers
             if (!repository.Create(bookToCreate))
             {
                 ModelState
-                    .AddModelError("", $"Something went wrong while saving {book.Title}.");
+                    .AddModelError("", $"Something went wrong while saving {book.Name}.");
 
                 return StatusCode(500, ModelState);
             }
 
             return CreatedAtRoute("GetBook",
-                new { authorId = bookToCreate.Id },
+                new { categoryId = bookToCreate.Id },
                 bookToCreate
             );
         }
 
-        [HttpPut("{bookId}")]
+        [HttpPut("{categoryId}")]
         [ProducesResponseType(204)] //no content
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Update(int bookId, [FromBody]Book updatedBook)
+        public IActionResult Update(int bookId, [FromBody]Category updatedBook)
         {
             if (updatedBook == null || bookId != updatedBook.Id)
             {
@@ -115,13 +115,13 @@ namespace BookApp.Controllers
             }
             if (!repository.Update(updatedBook))
             {
-                ModelState.AddModelError("", $"Something went wrong updating {updatedBook.Title}");
+                ModelState.AddModelError("", $"Something went wrong updating {updatedBook.Name}");
                 return StatusCode(500, ModelState);
             }
             return NoContent();
         }
 
-        [HttpDelete("{bookId}")]
+        [HttpDelete("{categoryId}")]
         [ProducesResponseType(204)] //no content
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -135,7 +135,7 @@ namespace BookApp.Controllers
                 return NotFound();
             }
 
-            Book bookToDelete = repository
+            Category bookToDelete = repository
                 .GetById(bookId);
 
             if (!ModelState.IsValid)
@@ -146,7 +146,7 @@ namespace BookApp.Controllers
             if (!repository.Delete(bookToDelete))
             {
                 ModelState
-                    .AddModelError("", $"Something went wrong deleting {bookToDelete.Title}");
+                    .AddModelError("", $"Something went wrong deleting {bookToDelete.Name}");
 
                 return StatusCode(500, ModelState);
             }
