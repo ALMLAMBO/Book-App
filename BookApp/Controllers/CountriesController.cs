@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using BookApp.Models;
 using BookApp.Dtos;
 
-namespace BookApp.Controllers {
+namespace BookApp.Controllers
+{
 	[Route("api/[controller]")]
 	[ApiController]
 	public class CountriesController : Controller {
+        /*
 		private ICountryRepository _countryRepository;
 
 		public CountriesController(ICountryRepository countryRepository) {
@@ -237,5 +239,6 @@ namespace BookApp.Controllers {
 
 			return NoContent();
 		}
+        */
 	}
 }

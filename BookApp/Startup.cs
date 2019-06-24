@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookApp.Models;
 using BookApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace BookApp {
 			});
 
 			services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<ReflectiveRepository<Author>>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
