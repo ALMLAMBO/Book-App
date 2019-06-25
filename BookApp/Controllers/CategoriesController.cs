@@ -37,14 +37,14 @@ namespace BookApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200, Type = typeof(Category))]
-        public IActionResult GetCategory(int bookId)
+        public IActionResult GetCategory(int categoryId)
         {
-            if (!repository.Exists(bookId))
+            if (!repository.Exists(categoryId))
             {
                 return NotFound();
             }
 
-            Category book = repository.GetById(bookId);
+            Category book = repository.GetById(categoryId);
 
             if (!ModelState.IsValid)
             {
@@ -103,13 +103,13 @@ namespace BookApp.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Update(int bookId, [FromBody]Category updatedBook)
+        public IActionResult Update(int categoryId, [FromBody]Category updatedBook)
         {
-            if (updatedBook == null || bookId != updatedBook.Id)
+            if (updatedBook == null || categoryId != updatedBook.Id)
             {
                 return BadRequest(ModelState);
             }
-            if (!repository.Exists(bookId))
+            if (!repository.Exists(categoryId))
             {
                 return NotFound();
             }
@@ -128,15 +128,15 @@ namespace BookApp.Controllers
         [ProducesResponseType(409)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Delete(int bookId)
+        public IActionResult Delete(int categoryId)
         {
-            if (!repository.Exists(bookId))
+            if (!repository.Exists(categoryId))
             {
                 return NotFound();
             }
 
             Category bookToDelete = repository
-                .GetById(bookId);
+                .GetById(categoryId);
 
             if (!ModelState.IsValid)
             {
