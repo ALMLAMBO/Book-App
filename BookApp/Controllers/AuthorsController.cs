@@ -19,6 +19,58 @@ namespace BookApp.Controllers
             repository = repo;
         }
 
+        [HttpGet("create")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200, Type = typeof(Author))]
+        public IActionResult CreateAuthor()
+        {
+            return View();
+        }
+
+        [HttpPost("create")]
+        [ProducesResponseType(201, Type = typeof(Author))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public IActionResult Create(Author authorToCreate)
+        {
+            if (authorToCreate == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Author author = repository.Get()
+                .Where(c => (c.FirstName + c.LastName).Trim().ToUpper() == (authorToCreate.FirstName + authorToCreate.LastName).Trim().ToUpper())
+                .FirstOrDefault();
+
+            if (author != null)
+            {
+                ModelState
+                    .AddModelError("", $"Author {author.FirstName + " " + author.LastName} already exists.");
+
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!repository.Create(authorToCreate))
+            {
+                ModelState
+                    .AddModelError("", $"Something went wrong while saving {authorToCreate.FirstName + " " + authorToCreate.LastName}.");
+
+                return StatusCode(500, ModelState);
+            }
+
+            Response.ContentType = "application/json";
+            return CreatedAtRoute("GetAuthor",
+                new { authorId = authorToCreate.Id },
+                authorToCreate
+            );
+        }
+
         [HttpGet]
         [ProducesResponseType(400)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Author>))]
@@ -52,49 +104,6 @@ namespace BookApp.Controllers
             }
 
             return Ok(author);
-        }
-
-        [HttpPost("")]
-        [ProducesResponseType(201, Type = typeof(Author))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(422)]
-        [ProducesResponseType(500)]
-        public IActionResult Create([FromBody]Author authorToCreate)
-        {
-            if (authorToCreate == null)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Author author = repository.Get()
-                .Where(c => (c.FirstName + c.LastName).Trim().ToUpper() == (authorToCreate.FirstName + authorToCreate.LastName).Trim().ToUpper())
-                .FirstOrDefault();
-
-            if (author != null)
-            {
-                ModelState
-                    .AddModelError("", $"Author {author.FirstName + " " + author.LastName} already exists.");
-
-                return StatusCode(422, ModelState);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (!repository.Create(authorToCreate))
-            {
-                ModelState
-                    .AddModelError("", $"Something went wrong while saving {authorToCreate.FirstName + " " + authorToCreate.LastName}.");
-
-                return StatusCode(500, ModelState);
-            }
-
-            return CreatedAtRoute("GetAuthor",
-                new { authorId = authorToCreate.Id },
-                authorToCreate
-            );
         }
 
         [HttpPut("{authorId}")]
