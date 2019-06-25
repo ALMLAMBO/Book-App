@@ -32,6 +32,15 @@ namespace BookApp.Controllers
             return Ok(books);
         }
 
+        [HttpGet("create")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200, Type = typeof(Category))]
+        public IActionResult CreateCategory()
+        {
+            return View();
+        }
+
         //api/countries/countryId
         [HttpGet("{categoryId}", Name = "GetCategory")]
         [ProducesResponseType(400)]
@@ -54,20 +63,22 @@ namespace BookApp.Controllers
             return Ok(book);
         }
 
-        [HttpPost("")]
+        [HttpPost("create")]
         [ProducesResponseType(201, Type = typeof(Category))]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Create([FromBody]Category bookToCreate)
+        public IActionResult Create([FromForm]Category categoryToCreate)
         {
-            if (bookToCreate == null)
+            var nvc = Request.Form;
+            categoryToCreate.Name = nvc["Name"];
+            if (categoryToCreate == null)
             {
                 return BadRequest(ModelState);
             }
 
             Category book = repository.Get()
-                .Where(c => (c.Name).Trim().ToUpper() == (bookToCreate.Name).Trim().ToUpper())
+                .Where(c => (c.Name).Trim().ToUpper() == (categoryToCreate.Name).Trim().ToUpper())
                 .FirstOrDefault();
 
             if (book != null)
@@ -83,17 +94,17 @@ namespace BookApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!repository.Create(bookToCreate))
+            if (!repository.Create(categoryToCreate))
             {
                 ModelState
                     .AddModelError("", $"Something went wrong while saving {book.Name}.");
 
                 return StatusCode(500, ModelState);
             }
-
+            Response.ContentType = "application/json";
             return CreatedAtRoute("GetCategory",
-                new { categoryId = bookToCreate.Id },
-                bookToCreate
+                new { categoryId = categoryToCreate.Id },
+                categoryToCreate
             );
         }
 

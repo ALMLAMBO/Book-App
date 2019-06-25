@@ -1,8 +1,10 @@
 ﻿using BookApp.Models;
 using BookApp.Services;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,10 +34,21 @@ namespace BookApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Create(Author authorToCreate)
+        public IActionResult Create([FromForm]Author authorToCreate)
         {
+            var nvc = Request.Form;
+            string firstName = nvc["FirstName"];
+            string lastName = nvc["LastName"];
+            authorToCreate.FirstName = firstName;
+            authorToCreate.LastName = lastName;
+            Console.WriteLine(authorToCreate);
+
+            //authorToCreate.FirstName = FirstName;
+            //authorToCreate.LastName = LastName;
+
             if (authorToCreate == null)
             {
+                Console.WriteLine(authorToCreate);
                 return BadRequest(ModelState);
             }
 
@@ -103,7 +116,46 @@ namespace BookApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(author);
+            //return Ok(author);
+            return View(author);
+        }
+
+        [HttpGet("edit/{authorId}", Name = "EditAuthor")]
+        [ProducesResponseType(204)] //no content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        [ProducesResponseType(200, Type = typeof(Author))]
+        public IActionResult EditAuthor([FromForm]int authorId)
+        {
+            return View(repository.GetById(authorId));
+        }
+
+        [HttpPut("edit/{authorId}")]
+        [ProducesResponseType(204)] //no content
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public IActionResult Update(int authorId)
+        {
+            Author updatedAuthor = new Author();
+            var nvc = Request.Form;
+            updatedAuthor.Id = authorId;
+            updatedAuthor.FirstName = nvc["FirstName"];
+            updatedAuthor.LastName = nvc["LastName"];
+
+            if (!repository.Exists(updatedAuthor.Id))
+            {
+                return NotFound();
+            }
+            if (!repository.Update(updatedAuthor))
+            {
+                ModelState.AddModelError("", $"Something went wrong updating {updatedAuthor.FirstName}");
+                return StatusCode(500, ModelState);
+            }
+            return View(repository.GetById(authorId));
         }
 
         [HttpPut("{authorId}")]
@@ -112,7 +164,7 @@ namespace BookApp.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Update(int authorId, [FromBody]Author updatedAuthor)
+        public IActionResult UpdateA(int authorId, [FromBody]Author updatedAuthor)
         {
             if(updatedAuthor == null || authorId != updatedAuthor.Id)
             {
@@ -127,7 +179,7 @@ namespace BookApp.Controllers
                 ModelState.AddModelError("", $"Something went wrong updating {updatedAuthor.FirstName}");
                 return StatusCode(500, ModelState);
             }
-            return NoContent();
+            return Delete(authorId);
         }
 
         [HttpDelete("{authorId}")]

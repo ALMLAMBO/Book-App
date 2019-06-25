@@ -51,16 +51,28 @@ namespace BookApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(book);
+            return View(book);
         }
 
-        [HttpPost("")]
+        [HttpGet("create")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
+        [ProducesResponseType(500)]
+        public IActionResult CreateBook()
+        {
+            return View();
+        }
+
+        [HttpPost("create")]
         [ProducesResponseType(201, Type = typeof(Book))]
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Create([FromBody]Book bookToCreate)
+        public IActionResult Create([FromForm]Book bookToCreate)
         {
+            var nvc = Request.Form;
+            bookToCreate.DatePublished = DateTime.Parse(nvc["DatePublished"]);
+            bookToCreate.Title = nvc["Title"];
             if (bookToCreate == null)
             {
                 return BadRequest(ModelState);
@@ -90,7 +102,7 @@ namespace BookApp.Controllers
 
                 return StatusCode(500, ModelState);
             }
-
+            Response.ContentType = "application/json";
             return CreatedAtRoute("GetBook",
                 new { authorId = bookToCreate.Id },
                 bookToCreate
