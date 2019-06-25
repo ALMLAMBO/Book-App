@@ -68,11 +68,8 @@ namespace BookApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Create([FromForm]Book bookToCreate)
+        public IActionResult Create([FromBody]Book bookToCreate)
         {
-            var nvc = Request.Form;
-            bookToCreate.DatePublished = DateTime.Parse(nvc["DatePublished"]);
-            bookToCreate.Title = nvc["Title"];
             if (bookToCreate == null)
             {
                 return BadRequest(ModelState);
@@ -102,7 +99,6 @@ namespace BookApp.Controllers
 
                 return StatusCode(500, ModelState);
             }
-            Response.ContentType = "application/json";
             return CreatedAtRoute("GetBook",
                 new { authorId = bookToCreate.Id },
                 bookToCreate

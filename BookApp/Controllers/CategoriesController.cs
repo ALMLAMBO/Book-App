@@ -68,10 +68,8 @@ namespace BookApp.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Create([FromForm]Category categoryToCreate)
+        public IActionResult Create([FromBody]Category categoryToCreate)
         {
-            var nvc = Request.Form;
-            categoryToCreate.Name = nvc["Name"];
             if (categoryToCreate == null)
             {
                 return BadRequest(ModelState);

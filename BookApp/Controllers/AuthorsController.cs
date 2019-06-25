@@ -138,14 +138,8 @@ namespace BookApp.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(422)]
         [ProducesResponseType(500)]
-        public IActionResult Update(int authorId)
+        public IActionResult Update([FromBody]Author updatedAuthor)
         {
-            Author updatedAuthor = new Author();
-            var nvc = Request.Form;
-            updatedAuthor.Id = authorId;
-            updatedAuthor.FirstName = nvc["FirstName"];
-            updatedAuthor.LastName = nvc["LastName"];
-
             if (!repository.Exists(updatedAuthor.Id))
             {
                 return NotFound();
@@ -155,7 +149,7 @@ namespace BookApp.Controllers
                 ModelState.AddModelError("", $"Something went wrong updating {updatedAuthor.FirstName}");
                 return StatusCode(500, ModelState);
             }
-            return View(repository.GetById(authorId));
+            return View(repository.GetById(updatedAuthor.Id));
         }
 
         [HttpPut("{authorId}")]
