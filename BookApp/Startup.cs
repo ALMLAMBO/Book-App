@@ -30,10 +30,10 @@ namespace BookApp {
 			services.AddDbContext<BookDbContext>(c => {
 				c.UseSqlServer(connectionString);
 			});
-
+            services.AddScoped<ReflectiveRepository<Category>>();
             services.AddScoped<ReflectiveRepository<Author>>();
             services.AddScoped<ReflectiveRepository<Book>>();
-            services.AddScoped<ReflectiveRepository<Category>>();
+            
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,12 +50,14 @@ namespace BookApp {
 
 			app.Use(async (context, next) => {
 				await next();
+                /*
 				if(context.Response.StatusCode == 404 && 
 					!Path.HasExtension(context.Request.Path.Value)) {
 			
 					context.Request.Path = "/index.html";
 					await next();
 				}
+                */
 			});
 
 			app.UseDefaultFiles();
